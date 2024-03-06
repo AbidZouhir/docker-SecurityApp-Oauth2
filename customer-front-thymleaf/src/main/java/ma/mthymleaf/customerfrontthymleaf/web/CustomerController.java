@@ -2,6 +2,7 @@ package ma.mthymleaf.customerfrontthymleaf.web;
 import lombok.AllArgsConstructor;
 import ma.mthymleaf.customerfrontthymleaf.entities.Customer;
 import ma.mthymleaf.customerfrontthymleaf.repository.CustomerRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,5 +19,20 @@ public class CustomerController {
         List<Customer> customerList=customerRepository.findAll();
         model.addAttribute("customersList",customerList);
         return "customersView";
+    }
+
+    @GetMapping("/products")
+    public String products(Model model){
+        return "products";
+    }
+
+    @GetMapping("/auth")
+    public Authentication authentication(Authentication authentication){
+        return authentication;
+    }
+
+    @GetMapping("/")
+    public String index(){
+        return "index";
     }
 }
