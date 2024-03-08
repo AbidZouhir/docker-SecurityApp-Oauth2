@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/").permitAll()
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID"))
+                .exceptionHandling(eh -> eh.accessDeniedPage("/notAuthorized"))
                 .build();
     }
     private OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler() {
