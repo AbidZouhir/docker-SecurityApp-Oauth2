@@ -14,7 +14,7 @@ import java.util.List;
 public class ProductRestController {
     private ProductRepository productRepository;
     @GetMapping("/products")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    //@PreAuthorize("hasAuthority('ADMIN')")
     public List<Product> products(){
         return productRepository.findAll();
     }
