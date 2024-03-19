@@ -12,8 +12,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
       config: {
-        url: 'http://localhost:8080/',
-        realm: 'customers_realm',
+        url: 'http://localhost:8080',
+        realm: 'customers-realm',
         clientId: 'angular-customer-client'
       },
       initOptions: {
