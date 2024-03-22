@@ -29,15 +29,28 @@ services:
     build: ./inventory-service
     container_name: zouhir-inventory-service
     ports:
-      - '8092:8092'
+      - '8081:8092'
     expose:
-      - '8092'
+      - '8081'
     restart: always
     depends_on:
       mysql-db-inventory:
         condition: service_healthy
     environment:
       - DB_URL=jdbc:mysql://mysql-db-inventory:3306/inventory-db
-
+  customer-front-thymleaf:
+    build: ./customer-front-thymleaf
+    container_name: customer-front-thymleaf
+    ports:
+      - '8090:8090'
+    expose:
+      - '8090'
+    restart: always
+    depends_on:
+      mysql-db-inventory:
+        condition: service_healthy
+    environment:
+      - KEYCLOAK_REDIRECT_URI= http://localhost:8090/login/oauth2/code/customer-client
+      - KEYCLOAK_ISSUER_URI= http://localhost:8080/realms/customers-realm
 volumes:
   mysql_data:
