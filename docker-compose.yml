@@ -38,19 +38,52 @@ services:
         condition: service_healthy
     environment:
       - DB_URL=jdbc:mysql://mysql-db-inventory:3306/inventory-db
-  customer-front-thymleaf:
-    build: ./customer-front-thymleaf
-    container_name: customer-front-thymleaf
-    ports:
-      - '8090:8090'
-    expose:
-      - '8090'
-    restart: always
-    depends_on:
-      mysql-db-inventory:
-        condition: service_healthy
+  postgres-service:
+    image: postgres
+    container_name: postgres-service
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     environment:
-      - KEYCLOAK_REDIRECT_URI= http://localhost:8090/login/oauth2/code/customer-client
-      - KEYCLOAK_ISSUER_URI= http://localhost:8080/realms/customers-realm
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: k1234
+    ports:
+      - '5432:5432'
+    expose:
+      - '5432'
+    healthcheck:
+      test: "exit 0"
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: zouhir@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: azer
+    volumes:
+        - pgadmin_data:/var/lib/pgadmin
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres-service:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: k1234
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command:
+      - start-dev
+    restart: always
+    ports:
+        - '8080:8080'
+    expose:
+        - '8080'
+    depends_on:
+      postgres-service:
+        condition: service_healthy
 volumes:
   mysql_data:
+  postgres_data:
+  pgadmin_data:
