@@ -83,6 +83,21 @@ services:
     depends_on:
       postgres-service:
         condition: service_healthy
+  customer-front-thymleaf:
+    build: ./customer-front-thymleaf
+    container_name: customer-front-thymleaf
+    ports:
+      - '8090:8090'
+    expose:
+      - '8090'
+    restart: always
+    depends_on:
+      - keycloak
+    environment:
+      - KEYCLOAK_REDIRECT_URI=http://localhost:8090/login/oauth2/code/customer-client
+      - KEYCLOAK_ISSUER_URI=http://keycloak:8080/realms/customers-realm
+      - KEYCLOAK_AUTH=http://localhost:8080/realms/customers-realm/protocol/openid-connect/auth
+      - KEYCLOAK_AUTH_TOKEN=http://localhost:8080/realms/customers-realm/protocol/openid-connect/token
 volumes:
   mysql_data:
   postgres_data:

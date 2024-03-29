@@ -40,6 +40,7 @@ public class CustomerController {
 
     @GetMapping("/products")
     public String products(Model model){
+        try {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         OAuth2AuthenticationToken oAuth2AuthenticationToken= (OAuth2AuthenticationToken) authentication;
@@ -53,6 +54,10 @@ public class CustomerController {
                 .body(new ParameterizedTypeReference<>(){});
         model.addAttribute("products",products);
         return "products";
+        }
+        catch (Exception e){
+            return "redirect:/notAuthorized";
+        }
     }
 
     @GetMapping("/auth")
